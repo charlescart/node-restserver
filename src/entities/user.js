@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const mongooseHidden = require('mongoose-hidden')({ defaultHidden: { _id: false } });
+const mongoosePaginate = require('mongoose-paginate-v2');
+const mongooseDelete = require('mongoose-delete');
 
 let roles = { values: ['USER_ROLE', 'ADMIN_ROLE'] };
 
@@ -31,6 +33,7 @@ let userSchema = new mongoose.Schema({
     },
     deletedAt: {
         type: Date,
+        index: true,
     },
     googleAt: {
         type: Date,
@@ -39,4 +42,7 @@ let userSchema = new mongoose.Schema({
 
 userSchema.plugin(uniqueValidator);
 userSchema.plugin(mongooseHidden);
+userSchema.plugin(mongoosePaginate);
+userSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
+
 module.exports = mongoose.model('User', userSchema);

@@ -7,7 +7,7 @@ const _ = require('underscore');
 const app = express();
 
 app.get('/user/:id', (req, res) => {
-    User.find({}, 'name', (err, users) => {
+    User.find({ _id: req.params.id }, (err, users) => {
         if (err)
             return res.status(400).json({ success: false, msg: -1 });
 
@@ -16,13 +16,13 @@ app.get('/user/:id', (req, res) => {
 });
 
 app.get('/users', async (req, res) => {
-    let pg = _.pick(req.query, 'skip', 'limit');
-    _.defaults(pg, { skip: 0, limit: 5 });
+    let options = _.pick(req.query, 'page', 'limit');
+    _.defaults(options, { page: 1, limit: 10, sort: { createdAt: 'desc' } });
 
     try {
-        let users = await User.find({/* googleAt: { $exists: true } */ }, null, { skip: parseInt(pg.skip), limit: Number(pg.limit) });
-        let count = await User.countDocuments();
-        return res.json({ users, count, success: true, msg: 1 });
+        let users = await User.paginate({}, options);
+        users = _.extend(users, { success: true, msg: 1 });
+        return res.json(users);
     } catch (err) {
         return res.status(400).json({ err, success: false, msg: -1 });
     }
@@ -60,8 +60,32 @@ app.put('/user/:id', async function (req, res) { // edit
         });
 });
 
-app.delete('/user', function (req, res) { // delete
-    res.json(`delete user`);
+app.delete('/user/:id', async (req, res) => {
+    let id = req.params.id;
+
+    // with promise
+    User.deleteById(id)
+        .then((user) => {
+            // user is a json: { n: 0, nModified: 0, ok: 1 }
+            if (user.n == 0)
+                return res.status(400).json({ user, success: false, msg: -3 }); // _id not fount!
+            else if (user.nModified == 0)
+                return res.json({ user, success: false, msg: -4 }); // Document not modified
+
+            return res.json({ user, success: true, msg: 1 });
+        }).catch((err) => {
+            return res.json({ err, success: false, msg: 1 });
+        });
+
+    // with callback
+    /* User.deleteById(id, (err, user) => {
+        if (err)
+            return res.status(400).json({ err, success: false, msg: -1 });
+        if (user.nModified == 0)
+            return res.json({ user, success: false, msg: -2 });
+
+        return res.json({ user, success: true, msg: 1 });
+    }); */
 });
 
 module.exports = app;
