@@ -1,5 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const connections = {
+    'development': `mongodb://${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`,
+    'test': ``,
+    'production': `mongodb+srv://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}$@${process.env.DATABASE_HOST}/${process.env.DATABASE_NAME}`,
+    // `mongodb+srv://cafe:Ch4rl3scart$@cafe-635gq.mongodb.net/cafe`
+};
 
 const app = express();
 
@@ -9,7 +15,13 @@ app.use(bodyParser.json()); // devuelve puro application/json
 app.use(require('./concepts/user/UserController'));
 app.use(require('./concepts/home/HomeController'));
 
-mongoose.connect(`mongodb://${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`, { useNewUrlParser: true, useCreateIndex: true })
+let url = ``;
+if (process.env.NODE_ENV == 'development')
+    url = `mongodb://${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`;
+else
+    url = `mongodb+srv://cafe:Ch4rl3scart$@cafe-635gq.mongodb.net/cafe`;
+
+mongoose.connect(connections[process.env.NODE_ENV], { useNewUrlParser: true, useCreateIndex: true })
     .catch((err) => {
         throw err;
     });

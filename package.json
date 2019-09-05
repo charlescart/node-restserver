@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r dotenv/config src/app.js",
-    "nodemon": "nodemon -r dotenv/config src/app.js -e js,html,hbs,css,json"
+    "nodemon": "nodemon -r dotenv/config src/app.js -e js,html,hbs,css,json,env"
   },
   "author": "Ing. Charles Rodriguez",
   "license": "ISC",
