@@ -41,7 +41,7 @@ app.put('/user/:id', async function (req, res) { // edit
     let id = req.params.id;
     let data = _.pick(req.body, 'name', 'email', 'role', 'password', 'img');
 
-    User.findById(id, `name role email`, async (err, user) => {
+    User.findById(id, `name role email`, (err, user) => {
         if (err)
             return res.status(400).json({ success: false, msg: -3 });
     });
@@ -58,6 +58,7 @@ app.put('/user/:id', async function (req, res) { // edit
         }).catch((err) => {
             return res.json(err);
         });
+    // TODO: hacer el else de este if (if (data.password)), si no se envia la contraseña no estoy editando
 });
 
 app.delete('/user/:id', async (req, res) => {
