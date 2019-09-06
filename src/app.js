@@ -9,10 +9,7 @@ const connections = {
 
 const app = express();
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
-app.use(bodyParser.json()); // devuelve puro application/json
-app.use(require('./concepts'));
+app.use('/api', require('./concepts'));
 
 mongoose.connect(connections[process.env.NODE_ENV], { useNewUrlParser: true, useCreateIndex: true })
     .catch((err) => {

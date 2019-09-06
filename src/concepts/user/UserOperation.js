@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const User = require('../../entities/user');
+const User = require('../../entities/User');
 const { encryptPassword } = require('../../helpers/EncryptPassword');
 
 const createUser = async (data) => {

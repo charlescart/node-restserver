@@ -1,6 +1,6 @@
 const express = require('express');
 const { createUser } = require('./UserOperation');
-const User = require('../../entities/user');
+const User = require('../../entities/User');
 const { encryptPassword } = require('../../helpers/EncryptPassword');
 const _ = require('underscore');
 
