@@ -4,7 +4,7 @@ const connections = {
     'development': `mongodb://${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`,
     'test': ``,
     'production': `mongodb+srv://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}/${process.env.DATABASE_NAME}`,
-    // `mongodb+srv://cafe:Ch4rl3scart$@cafe-635gq.mongodb.net/cafe`
+    // `mongodb+srv://<user>:<password>@cafe-635gq.mongodb.net/cafe`
 };
 
 const app = express();
