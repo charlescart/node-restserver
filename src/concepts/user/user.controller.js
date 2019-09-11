@@ -3,6 +3,8 @@ const { createUser } = require('./UserOperation');
 const User = require('../../entities/User');
 const { encryptPassword } = require('../../helpers/EncryptPassword');
 const _ = require('underscore');
+const { verifyToken } = require('../../middlewares/authentication');
+
 
 const app = express();
 
@@ -15,7 +17,7 @@ app.get('/user/:id', (req, res) => {
     });
 });
 
-app.get('/users', async (req, res) => {
+app.get('/users', verifyToken, async (req, res) => {
     let options = _.pick(req.query, 'page', 'limit');
     _.defaults(options, { page: 1, limit: 10, sort: { createdAt: 'desc' } });
 
