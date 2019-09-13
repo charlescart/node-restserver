@@ -4,7 +4,7 @@ const app = express();
 
 
 app.get('/', function (req, res) {
-    res.json({ msg: `Hello Word!`, success: true });
+    res.json({ msg: `Api Runing...`, success: true });
 });
 
 module.exports = app;
