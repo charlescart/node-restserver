@@ -4,9 +4,12 @@ const User = require('../../entities/User');
 const { encryptPassword } = require('../../helpers/EncryptPassword');
 const _ = require('underscore');
 const { verifyToken } = require('../../middlewares/authentication');
+const { verifyRole } = require('../../middlewares/roles');
+const Validator = require('validatorjs');
 
 
 const app = express();
+Validator.useLang('es');
 
 app.get('/user/:id', (req, res) => {
     User.find({ _id: req.params.id }, (err, users) => {
@@ -21,13 +24,11 @@ app.get('/users', verifyToken, async (req, res) => {
     let options = _.pick(req.query, 'page', 'limit');
     _.defaults(options, { page: 1, limit: 10, sort: { createdAt: 'desc' } });
 
-    try {
-        let users = await User.paginate({}, options);
-        users = _.extend(users, { success: true, msg: 1 });
-        return res.json(users);
-    } catch (err) {
-        return res.status(400).json({ err, success: false, msg: -1 });
-    }
+    let users = await User.paginate({}, options).catch((err) => {
+        res.status(400).json({ err, success: false, msg: -1 });
+    });
+    users = _.extend(users, { success: true, msg: 1 });
+    return res.json(users);
 });
 
 app.post('/user', (req, res) => {
@@ -39,31 +40,41 @@ app.post('/user', (req, res) => {
         });
 });
 
-app.put('/user/:id', async function (req, res) { // edit
+app.put('/user/:id', [verifyToken, verifyRole], async (req, res) => {
     let id = req.params.id;
     let data = _.pick(req.body, 'name', 'email', 'role', 'password', 'img');
+    let rules = {
+        name: 'string|min:3',
+        email: 'email',
+        // password: 'present',
+        role: 'in:USER_ROLE,ADMIN_ROLE',
+    };
+    let validation = new Validator(data, rules);
 
-    User.findById(id, `name role email`, (err, user) => {
-        if (err)
-            return res.status(400).json({ success: false, msg: -3 });
+    if (validation.fails())
+        return res.status(422).json(validation.errors.all());
+
+    let userExist = await User.findById(id).catch((err) => {
+        res.status(500).json({ err, success: false, msg: -1 });
     });
 
-    if (data.password)
-        encryptPassword(data.password).then(async (hash) => {
-            data.password = hash;
-            let result = await User.updateOne({ _id: id }, data, { runValidators: true, context: 'query' });
+    if (!userExist)
+        return res.json(userExist);
 
-            if (result.nModified)
-                return res.json({ success: true, msg: 1 });
-            else
-                return res.status(400).json({ success: false, msg: -4 });
-        }).catch((err) => {
-            return res.json(err);
+    if (data.password)
+        data.password = await encryptPassword(data.password).catch((err) => {
+            return res.json(err); // error al encriptar password
         });
-    // TODO: hacer el else de este if (if (data.password)), si no se envia la contraseña no estoy editando
+
+    User.updateOne({ _id: id }, data, { runValidators: true, context: 'query' })
+        .then((result) => { // nModified
+            res.json({ result, success: true, msg: 1 });
+        }).catch((err) => {
+            res.status(400).json({ success: false, msg: -4 });
+        });
 });
 
-app.delete('/user/:id', async (req, res) => {
+app.delete('/user/:id', [verifyToken, verifyRole], async (req, res) => {
     let id = req.params.id;
 
     // with promise
@@ -77,7 +88,7 @@ app.delete('/user/:id', async (req, res) => {
 
             return res.json({ user, success: true, msg: 1 });
         }).catch((err) => {
-            return res.json({ err, success: false, msg: 1 });
+            return res.json({ err, success: false, msg: -1 });
         });
 
     // with callback
