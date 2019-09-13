@@ -20,7 +20,7 @@ app.get('/user/:id', (req, res) => {
     });
 });
 
-app.get('/users', verifyToken, async (req, res) => {
+app.get('/users', [verifyToken, verifyRole], async (req, res) => {
     let options = _.pick(req.query, 'page', 'limit');
     _.defaults(options, { page: 1, limit: 10, sort: { createdAt: 'desc' } });
 

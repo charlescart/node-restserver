@@ -3,6 +3,7 @@ const User = require('../../entities/User');
 const _ = require('underscore');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { encrypt } = require('simple-encryptor')(process.env.SIMPLE_ENCRYPTOR_KEY);
 
 const app = express();
 
@@ -21,7 +22,8 @@ app.post('/login', async (req, res) => {
         if (!compare)
             return res.json({ success: false, msg: -8 }); // password not mached
 
-        let token = jwt.sign({ user }, process.env.TOKEN_SEED, { expiresIn: process.env.TOKEN_EXPIRE_IN });
+        let _u_ = encrypt(_.pick(user, '_id'));
+        let token = jwt.sign({ _u_ }, process.env.TOKEN_SEED, { expiresIn: process.env.TOKEN_EXPIRE_IN });
         res.json({ token, user, success: true, msg: 1 });
     }).catch((err) => {
         res.status(500).json({ err, success: false, msg: -2 }) // error de server
