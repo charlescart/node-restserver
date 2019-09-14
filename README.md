@@ -192,3 +192,17 @@ Header: Authorization: token
   "msg": 1
 }
 ```
+#### Codigos de error
+En el Json de respuesta siempre encontrará el index `msg`.
+```
+ 1 ~> Operación realizada con éxito
+ 0 ~>
+-1 ~> Error al realizar la operación
+-2 ~> Error al encriptar contraseña
+-3 ~> Recurso no encontrado
+-4 ~> No se pudieron realizar las modificaciones
+-5 ~> Sin acceso a su Json Web Token
+-6 ~> No posee los privilegios necesarios
+-7 ~> Problemas con su Json Web Token
+-8 ~> Email o contraseña inválidos
+```
