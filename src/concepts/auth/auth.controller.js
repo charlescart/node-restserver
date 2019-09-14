@@ -20,7 +20,7 @@ app.post('/login', async (req, res) => {
 
     bcrypt.compare(body.password, user.password).then((compare) => {
         if (!compare)
-            return res.json({ success: false, msg: -8 }); // password not mached
+            return res.status(400).json({ success: false, msg: -8 }); // password not mached
 
         let _u_ = encrypt(_.pick(user, '_id'));
         let token = jwt.sign({ _u_ }, process.env.TOKEN_SEED, { expiresIn: process.env.TOKEN_EXPIRE_IN });
