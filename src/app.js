@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const connections = {
     'development': `mongodb://${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`,
     'test': ``,
@@ -10,6 +11,7 @@ const connections = {
 const app = express();
 
 app.use('/api', require('./concepts'));
+app.use('/api', express.static(path.resolve(__dirname, '../public'))); // usar path.resolve() si usas ../
 
 mongoose.connect(connections[process.env.NODE_ENV], { useNewUrlParser: true, useCreateIndex: true })
     .catch((err) => {

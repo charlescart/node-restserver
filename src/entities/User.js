@@ -20,7 +20,9 @@ let userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function () { // no se usa function de flecha por que se esta usando this
+            return !this.googleAt; // la password es requerida solo cuando el campo googleAt no existe
+        },
         hide: true,
     },
     img: {
