@@ -197,7 +197,7 @@ Header: Authorization: token
 > <a href="https://documenter.getpostman.com/view/1469666/SVmvTeWF" target="_blank">https://documenter.getpostman.com/view/1469666/SVmvTeWF</a>
 
 # Codigos de error
-En el Json de respuesta siempre encontrará el index `msg`.
+En el Json de respuesta siempre encontrará el key `msg` con un numero, el significado del mismo puede encontrarlo en la siguiente lista:
 ```
  1 ~> Operación realizada con éxito
  0 ~>
