@@ -206,3 +206,6 @@ En el Json de respuesta siempre encontrará el index `msg`.
 -7 ~> Problemas con su Json Web Token
 -8 ~> Email o contraseña inválidos
 ```
+
+# Collección PostMan de Api
+> https://documenter.getpostman.com/view/1469666/SVmvTeWF
