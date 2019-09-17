@@ -12,7 +12,7 @@ const { encryptPassword } = require('../../helpers/EncryptPassword');
 const app = express();
 
 
-app.post('/login', async (req, res) => {
+app.post('/sign-in', async (req, res) => {
     let body = _.pick(req.body, 'email', 'password');
 
     let user = await User.findOne({ email: body.email }).catch((err) => {
@@ -44,7 +44,7 @@ app.post('/login', async (req, res) => {
         return res.status(400).json({ success: false, msg: -8 }); // password not found
 });
 
-app.post('/google-sign-up', async (req, res) => {
+app.post('/sign-up-google', async (req, res) => {
     verify(req.body.idToken)
         .then(async (gUser) => {
             let user = await User.findOne({ email: gUser.email }).catch(err => {
