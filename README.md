@@ -192,7 +192,11 @@ Header: Authorization: token
   "msg": 1
 }
 ```
-#### Codigos de error
+
+# Collección PostMan de Api
+> <a href="https://documenter.getpostman.com/view/1469666/SVmvTeWF" target="_blank">https://documenter.getpostman.com/view/1469666/SVmvTeWF</a>
+
+# Codigos de error
 En el Json de respuesta siempre encontrará el index `msg`.
 ```
  1 ~> Operación realizada con éxito
@@ -206,6 +210,3 @@ En el Json de respuesta siempre encontrará el index `msg`.
 -7 ~> Problemas con su Json Web Token
 -8 ~> Email o contraseña inválidos
 ```
-
-# Collección PostMan de Api
-> https://documenter.getpostman.com/view/1469666/SVmvTeWF
