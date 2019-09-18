@@ -9,5 +9,6 @@ app.use(bodyParser.json()); // devuelve puro application/json
 app.use(require('./home/home.controller'));
 app.use(require('./user/user.controller'));
 app.use(require('./auth/auth.controller'));
+app.use(require('./category/category.controller'));
 
 module.exports = app;
