@@ -69,8 +69,8 @@ app.post('/category', [verifyToken], (req, res) => {
     });
 });
 
-app.put('/category/:id', [verifyToken], (req, res) => {
-    // TODO: verificar jwt y role tiene que ser admin o creador del recurso
+app.put('/category/:id', [verifyToken, verifyRole], (req, res) => {
+    // TODO: crear middleware para verificar que sea creador del recurso o admin role
     let id = req.params.id;
     let data = _.pick(req.body, 'name', 'description');
     let validation = new Validator(data, rulesForCategory);
@@ -89,8 +89,15 @@ app.put('/category/:id', [verifyToken], (req, res) => {
         }).catch(err => res.status(500).json({ err, success: false, msg: -1 }));
 });
 
-app.delete('', [], (req, res) => {
-    // TODO: jwt verify and role is admin
+app.delete('/category/:id', [verifyToken, verifyRole], (req, res) => {
+    let id = req.params.id;
+
+    Category.findByIdAndRemove(id).then((category) => {
+        if (!category) return res.status(400).json({ success: false, msg: -3 });
+        res.json({ success: true, msg: 1 });
+    }).catch((err) => {
+        res.status(400).json({ err, success: false, msg: -1 });
+    });
 });
 
 module.exports = app;

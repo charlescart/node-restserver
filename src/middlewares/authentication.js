@@ -9,7 +9,7 @@ const verifyToken = (req, res, next) => {
         req.user = decrypt(payload._u_);
         next();
     } catch (err) {
-        return res.status(401).json({ err, success: false, msg: -7 }); // jwt invalid, Unauthorized
+        res.status(401).json({ err, success: false, msg: -7 }); // jwt invalid, Unauthorized
     }
 };
 
