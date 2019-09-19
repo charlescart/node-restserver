@@ -15,6 +15,11 @@ const categorySchema = new mongoose.Schema({
         required: true,
     },
     user: [{
+        /*
+        El hecho de que sea un array [], indica que soporta varios user id, es decir la logica seria
+        que una categoria tiene o podria tener varios usuarios creadores, aunque este no es el modelo de negocio
+        en nuestro caso lo dejo asi de ejemplo.
+        */
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
