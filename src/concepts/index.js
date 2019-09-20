@@ -10,5 +10,6 @@ app.use(require('./home/home.controller'));
 app.use(require('./user/user.controller'));
 app.use(require('./auth/auth.controller'));
 app.use(require('./category/category.controller'));
+app.use(require('./product/product.controller'));
 
 module.exports = app;

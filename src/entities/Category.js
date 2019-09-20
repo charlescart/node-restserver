@@ -14,7 +14,7 @@ const categorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    user: [{
+    user: {
         /*
         El hecho de que sea un array [], indica que soporta varios user id, es decir la logica seria
         que una categoria tiene o podria tener varios usuarios creadores, aunque este no es el modelo de negocio
@@ -23,7 +23,7 @@ const categorySchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
-    }]
+    }
 }, { timestamps: true });
 
 categorySchema.plugin(uniqueValidator);
