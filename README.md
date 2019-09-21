@@ -209,4 +209,5 @@ En el Json de respuesta siempre encontrará el key `msg` con un numero, el signi
 -6 ~> No posee los privilegios necesarios
 -7 ~> Problemas con su Json Web Token
 -8 ~> Email o contraseña inválidos
+-9 ~> Documento al cual hace referencia no existe
 ```
