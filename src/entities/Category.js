@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const mongoosePaginate = require('mongoose-paginate-v2');
+const mongooseDelete = require('mongoose-delete');
 
 const categorySchema = new mongoose.Schema({
     name: {
@@ -28,5 +29,6 @@ const categorySchema = new mongoose.Schema({
 
 categorySchema.plugin(uniqueValidator);
 categorySchema.plugin(mongoosePaginate);
+categorySchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 module.exports = mongoose.model('Category', categorySchema);

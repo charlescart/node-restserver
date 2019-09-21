@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
+const idValidator = require('mongoose-id-validator');
+const mongooseDelete = require('mongoose-delete');
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -32,5 +34,7 @@ const productSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 productSchema.plugin(mongoosePaginate);
+productSchema.plugin(idValidator);
+productSchema.plugin(mongooseDelete, { deletedAt: true, overrideMethods: true });
 
 module.exports = mongoose.model('Product', productSchema);
