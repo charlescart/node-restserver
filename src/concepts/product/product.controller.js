@@ -14,7 +14,6 @@ const rulesPoduct = {
     price: 'required|numeric|min:1',
     description: 'required|string|min:3',
     left: 'numeric|min:1',
-    categories: 'required',
     user: 'required',
 };
 
@@ -56,10 +55,12 @@ app.get('/product/:id', [verifyToken], (req, res) => {
 app.post('/product', [verifyToken], (req, res) => {
     let data = _.pick(req.body, 'name', 'price', 'description', 'left', 'categories');
     data.user = req.user._id;
-    data.categories = stringArray.parse(data.categories).array;
+    rulesPoduct.categories = 'required';
     let validation = new Validator(data, rulesPoduct);
 
     if (validation.fails()) return res.status(422).json(validation.errors.all());
+
+    data.categories = stringArray.parse(data.categories).array;
     data = _.mapObject(data, (val, key) => {
         if (key == 'name') return Case.title(val);
         if (key == 'description') return Case.sentence(val);
@@ -80,26 +81,26 @@ app.post('/product', [verifyToken], (req, res) => {
 
 app.put('/product/:id', [verifyToken, verifyRole], (req, res) => {
     let id = req.params.id;
+    delete rulesPoduct.user;
     let data = _.pick(req.body, 'name', 'price', 'description', 'left');
-    data.user = req.params.id;
-    data.categories = stringArray.parse(req.body.categories).array;
+    if (req.body.categories) data.categories = stringArray.parse(req.body.categories).array;
     let validation = new Validator(data, rulesPoduct);
 
     if (validation.fails()) return res.status(422).json(validation.errors.all());
 
     Product.findById(id).then((product) => {
-        product.name = Case.title(data.name);
-        product.price = data.price;
-        product.description = Case.sentence(data.description);
-        product.letf = data.letf;
-        product.categories = data.categories;
-
         product.validate().then(() => { // validando los campos ref de Product, categories y user.
-            product.save()
-                .then(product => res.json({ product, success: true, msg: 1 }))
+            data.name = Case.title(data.name);
+            data.description = Case.sentence(data.description);
+            console.log(data);
+            Product.updateOne({ _id: product._id }, data)
+                .then(product => {
+                    if (!product.n) return res.json({ product, success: false, msg: -3 });
+                    res.json({ product, success: true, msg: 1 })
+                })
                 .catch(err => res.status(500).json({ err, success: false, msg: -100 }));
         }).catch(err => res.status(422).json({ err: err.errors, success: false, msg: -9 }));
-    }).catch(err => res.status(500).json({ err, success: false, msg: -1 }));
+    }).catch(err => res.status(400).json({ err, success: false, msg: -3 }));
 });
 
 app.delete('/product/:id', [verifyToken, verifyRole], (req, res) => {
