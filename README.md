@@ -3,7 +3,7 @@
 
 [![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
 # Collección PostMan de Api
-> <a href="https://documenter.getpostman.com/view/1469666/SVmvTeWF" target="_blank">https://documenter.getpostman.com/view/1469666/SVmvTeWF</a>
+| <a href="https://documenter.getpostman.com/view/1469666/SVmvTeWF" target="_blank">https://documenter.getpostman.com/view/1469666/SVmvTeWF</a>
 # Instalación
 
 Ejecute `npm install` para instalar las dependencias:
