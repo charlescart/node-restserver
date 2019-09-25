@@ -2,6 +2,8 @@
 | Nodejs | Express | MongoDB | Jwt |
 
 [![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
+# Collección PostMan de Api
+> <a href="https://documenter.getpostman.com/view/1469666/SVmvTeWF" target="_blank">https://documenter.getpostman.com/view/1469666/SVmvTeWF</a>
 # Instalación
 
 Ejecute `npm install` para instalar las dependencias:
@@ -192,10 +194,6 @@ Header: Authorization: token
   "msg": 1
 }
 ```
-
-# Collección PostMan de Api
-> <a href="https://documenter.getpostman.com/view/1469666/SVmvTeWF" target="_blank">https://documenter.getpostman.com/view/1469666/SVmvTeWF</a>
-
 # Codigos de error
 En el Json de respuesta siempre encontrará el key `msg` con un numero, el significado del mismo puede encontrarlo en la siguiente lista:
 ```
