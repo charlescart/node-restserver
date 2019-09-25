@@ -47,9 +47,25 @@ app.get('/product/:id', [verifyToken], (req, res) => {
         .then((product) => {
             if (!product) return res.status(400).json({ success: false, msg: -3 });
             res.json({ product, success: true, msg: 1 });
-        }).catch((err) => {
-            res.status(400).json({ err, success: false, msg: -1 });
-        });
+        }).catch(err => res.status(400).json({ err, success: false, msg: -1 }));
+});
+
+app.get('/product/search/:query', [verifyToken], (req, res) => {
+    let regex = new RegExp(req.params.query, 'i');
+    let options = _.pick(req.query, 'page', 'limit');
+    let rules = { page: 'required|numeric|min:1', limit: 'required|numeric|min:1|max:20' };
+    _.defaults(options, {
+        page: 1, limit: 10, sort: { createdAt: 'DESC' },
+        populate: { path: 'categories user', select: 'name description email' }
+    });
+    let validation = new Validator(options, rules);
+
+    if (validation.fails()) return res.status(422).json(validation.errors.all());
+
+    Product.paginate({ $or: [{ name: regex }, { description: regex }] }, options)
+        .then((products) => {
+            res.json({ success: true, msg: 1, ...products });
+        }).catch(err => res.status(500).json({ err, success: false, msg: -1 }));
 });
 
 app.post('/product', [verifyToken], (req, res) => {
