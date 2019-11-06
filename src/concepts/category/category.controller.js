@@ -71,6 +71,7 @@ app.post('/category', [verifyToken], (req, res) => {
 
 app.put('/category/:id', [verifyToken, verifyRole], (req, res) => {
     // TODO: crear middleware para verificar que sea creador del recurso o admin role
+    // TODO: app.use( fileUpload({ useTempFiles: true }) );
     let id = req.params.id;
     let data = _.pick(req.body, 'name', 'description');
     let validation = new Validator(data, rulesForCategory);

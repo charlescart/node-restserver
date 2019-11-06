@@ -11,5 +11,6 @@ app.use(require('./user/user.controller'));
 app.use(require('./auth/auth.controller'));
 app.use(require('./category/category.controller'));
 app.use(require('./product/product.controller'));
+app.use(require('./upload/upload.controller'));
 
 module.exports = app;
