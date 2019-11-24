@@ -1,28 +1,30 @@
 const express = require('express');
-const multer = require('multer');
 const path = require('path');
+const fileUpload = require('express-fileupload');
+const User = require('../../entities/User');
+
 const app = express();
-// const upload = multer({ dest: 'uploads/' });
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-        // cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
-    }
-});
 
-const upload = multer({
-    storage: storage
-});
+app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 }, safeFileNames: true, preserveExtension: true }));
 
+app.put('/upload/:type/:id', (req, res) => {
+    let { type, id } = req.params, typeValids = ['user', 'product'];
 
-app.post('/upload', upload.fields([{ name: 'pastimetro', maxCount: 1 }]), (req, res, next) => {
-    if (!req.files) res.status(400).json({ success: false, msg: -1 });
+    if (typeValids.indexOf(type) < 0) return res.status(400).json({ success: false, msg: -3 });
+    if (!req.files || Object.keys(req.files).length === 0)
+        return res.status(400).json({ success: false, msg: -1 });
 
-    let file = req.files['pastimetro'][0];
-    res.json({ file })
+    let file = req.files.file;
+    let extFile = file.name.split('.'), extValids = ['text', 'png', 'jpg'];
+    extFile = extFile[extFile.length - 1];
+
+    if (extValids.indexOf(extFile) < 0) return res.status(400).json({ success: false, msg: -2 });
+
+    file.mv(path.join(`./uploads/${type}/${Date.now()}.${extFile}`), (err) => {
+        if (err) return res.status(500).json({ err, success: false, msg: -1 });
+
+        res.json({ success: true, msg: 1 });
+    });
 });
 
 module.exports = app;
