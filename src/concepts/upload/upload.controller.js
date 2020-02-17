@@ -6,8 +6,10 @@ const User = require('../../entities/User');
 const app = express();
 
 app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 }, safeFileNames: true, preserveExtension: true }));
-
-app.put('/upload/:type/:id', (req, res) => {
+// apply Joi validator
+// middleware con Joi
+// repository y service
+app.put('/upload/:type/:id', [], (req, res) => {
     let { type, id } = req.params, typeValids = ['user', 'product'];
 
     if (typeValids.indexOf(type) < 0) return res.status(400).json({ success: false, msg: -3 });
